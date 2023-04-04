@@ -7,27 +7,46 @@ import { api } from './services/api'
 function App() {
 
   const [characterList, setCharacterList] = useState([])
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
 
     const request = async () => {
 
       try {
-        const response = await api.get('character');
+        const response = await api.get(`character?page=${page}`)
         setCharacterList(response.data.results)
-
-      } catch (error){
+        console.log(response)
+      } catch (error) {
         console.log(error)
 
       }
     }
     request()
-  }, [])
+  }, [page])
 
+  const nextPage = () => {
+    
+    if(page > 0)
+    setPage(page + 1)
+    console.log(page)
+  }
   
+  const previousPage = () => {
+    
+    if(page > 1)
+    setPage(page - 1)
+    console.log(page)
+  }
+
+
   return (
     <div className="App">
-      <Characters characterList={characterList}/>
+      <div>
+        <button onClick={nextPage}>Next Page</button>
+        <button onClick={previousPage}>Previous Page</button>
+      </div>
+      <Characters characterList={characterList} />
     </div>
   )
 }
